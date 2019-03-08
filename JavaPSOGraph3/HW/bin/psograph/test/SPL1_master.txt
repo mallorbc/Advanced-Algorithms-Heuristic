@@ -1,0 +1,158 @@
+
+Number of paths from 0 to 0 is 1
+start of path 0  : Path Length 0
+Number of paths from 0 to 1 is 1
+start of path 0  1 : Path Length 1
+Number of paths from 0 to 2 is 1
+start of path 0  2 : Path Length 1
+Number of paths from 0 to 3 is 1
+start of path 0  3 : Path Length 1
+Number of paths from 0 to 4 is 2
+start of path 0  1 7 4 : Path Length 3
+start of path 0  2 7 4 : Path Length 3
+Number of paths from 0 to 5 is 1
+start of path 0  3 5 : Path Length 2
+Number of paths from 0 to 6 is 3
+start of path 0  1 7 6 : Path Length 3
+start of path 0  2 7 6 : Path Length 3
+start of path 0  3 5 6 : Path Length 3
+Number of paths from 0 to 7 is 2
+start of path 0  1 7 : Path Length 2
+start of path 0  2 7 : Path Length 2
+
+Number of paths from 1 to 0 is 1
+start of path 1  0 : Path Length 1
+Number of paths from 1 to 1 is 1
+start of path 1  : Path Length 0
+Number of paths from 1 to 2 is 2
+start of path 1  0 2 : Path Length 2
+start of path 1  7 2 : Path Length 2
+Number of paths from 1 to 3 is 1
+start of path 1  0 3 : Path Length 2
+Number of paths from 1 to 4 is 1
+start of path 1  7 4 : Path Length 2
+Number of paths from 1 to 5 is 2
+start of path 1  0 3 5 : Path Length 3
+start of path 1  7 6 5 : Path Length 3
+Number of paths from 1 to 6 is 1
+start of path 1  7 6 : Path Length 2
+Number of paths from 1 to 7 is 1
+start of path 1  7 : Path Length 1
+
+Number of paths from 2 to 0 is 1
+start of path 2  0 : Path Length 1
+Number of paths from 2 to 1 is 2
+start of path 2  0 1 : Path Length 2
+start of path 2  7 1 : Path Length 2
+Number of paths from 2 to 2 is 1
+start of path 2  : Path Length 0
+Number of paths from 2 to 3 is 1
+start of path 2  0 3 : Path Length 2
+Number of paths from 2 to 4 is 1
+start of path 2  7 4 : Path Length 2
+Number of paths from 2 to 5 is 2
+start of path 2  0 3 5 : Path Length 3
+start of path 2  7 6 5 : Path Length 3
+Number of paths from 2 to 6 is 1
+start of path 2  7 6 : Path Length 2
+Number of paths from 2 to 7 is 1
+start of path 2  7 : Path Length 1
+
+Number of paths from 3 to 0 is 1
+start of path 3  0 : Path Length 1
+Number of paths from 3 to 1 is 1
+start of path 3  0 1 : Path Length 2
+Number of paths from 3 to 2 is 1
+start of path 3  0 2 : Path Length 2
+Number of paths from 3 to 3 is 1
+start of path 3  : Path Length 0
+Number of paths from 3 to 4 is 3
+start of path 3  0 1 7 4 : Path Length 4
+start of path 3  0 2 7 4 : Path Length 4
+start of path 3  5 6 7 4 : Path Length 4
+Number of paths from 3 to 5 is 1
+start of path 3  5 : Path Length 1
+Number of paths from 3 to 6 is 1
+start of path 3  5 6 : Path Length 2
+Number of paths from 3 to 7 is 3
+start of path 3  0 1 7 : Path Length 3
+start of path 3  0 2 7 : Path Length 3
+start of path 3  5 6 7 : Path Length 3
+
+Number of paths from 4 to 0 is 2
+start of path 4  7 1 0 : Path Length 3
+start of path 4  7 2 0 : Path Length 3
+Number of paths from 4 to 1 is 1
+start of path 4  7 1 : Path Length 2
+Number of paths from 4 to 2 is 1
+start of path 4  7 2 : Path Length 2
+Number of paths from 4 to 3 is 3
+start of path 4  7 1 0 3 : Path Length 4
+start of path 4  7 2 0 3 : Path Length 4
+start of path 4  7 6 5 3 : Path Length 4
+Number of paths from 4 to 4 is 1
+start of path 4  : Path Length 0
+Number of paths from 4 to 5 is 1
+start of path 4  7 6 5 : Path Length 3
+Number of paths from 4 to 6 is 1
+start of path 4  7 6 : Path Length 2
+Number of paths from 4 to 7 is 1
+start of path 4  7 : Path Length 1
+
+Number of paths from 5 to 0 is 1
+start of path 5  3 0 : Path Length 2
+Number of paths from 5 to 1 is 2
+start of path 5  3 0 1 : Path Length 3
+start of path 5  6 7 1 : Path Length 3
+Number of paths from 5 to 2 is 2
+start of path 5  3 0 2 : Path Length 3
+start of path 5  6 7 2 : Path Length 3
+Number of paths from 5 to 3 is 1
+start of path 5  3 : Path Length 1
+Number of paths from 5 to 4 is 1
+start of path 5  6 7 4 : Path Length 3
+Number of paths from 5 to 5 is 1
+start of path 5  : Path Length 0
+Number of paths from 5 to 6 is 1
+start of path 5  6 : Path Length 1
+Number of paths from 5 to 7 is 1
+start of path 5  6 7 : Path Length 2
+
+Number of paths from 6 to 0 is 3
+start of path 6  5 3 0 : Path Length 3
+start of path 6  7 1 0 : Path Length 3
+start of path 6  7 2 0 : Path Length 3
+Number of paths from 6 to 1 is 1
+start of path 6  7 1 : Path Length 2
+Number of paths from 6 to 2 is 1
+start of path 6  7 2 : Path Length 2
+Number of paths from 6 to 3 is 1
+start of path 6  5 3 : Path Length 2
+Number of paths from 6 to 4 is 1
+start of path 6  7 4 : Path Length 2
+Number of paths from 6 to 5 is 1
+start of path 6  5 : Path Length 1
+Number of paths from 6 to 6 is 1
+start of path 6  : Path Length 0
+Number of paths from 6 to 7 is 1
+start of path 6  7 : Path Length 1
+
+Number of paths from 7 to 0 is 2
+start of path 7  1 0 : Path Length 2
+start of path 7  2 0 : Path Length 2
+Number of paths from 7 to 1 is 1
+start of path 7  1 : Path Length 1
+Number of paths from 7 to 2 is 1
+start of path 7  2 : Path Length 1
+Number of paths from 7 to 3 is 3
+start of path 7  1 0 3 : Path Length 3
+start of path 7  2 0 3 : Path Length 3
+start of path 7  6 5 3 : Path Length 3
+Number of paths from 7 to 4 is 1
+start of path 7  4 : Path Length 1
+Number of paths from 7 to 5 is 1
+start of path 7  6 5 : Path Length 2
+Number of paths from 7 to 6 is 1
+start of path 7  6 : Path Length 1
+Number of paths from 7 to 7 is 1
+start of path 7  : Path Length 0

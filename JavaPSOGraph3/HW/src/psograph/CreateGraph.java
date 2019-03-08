@@ -20,6 +20,7 @@ package psograph;
 
 import java.io.*;
 import java.util.Random;
+import java.util.TreeMap;
 import java.util.Vector;
 
 import psograph.graph.*;
@@ -133,32 +134,95 @@ public class CreateGraph
 		// 3) Make a MST of the nodes
 		//
 		
-		int num_of_nodes = v_Nodes.size();				
+		//Prim's algorithm
+		/*3 arrays:
 		
+		
+		//Start at node 0.
+		InTree[0] = true
+		int Parent[0] = -1
+		
+		update Nearest, InTree, and Parent
+		call public TreeMap<Integer,Edge> getNeighbors()
+		
+		select neighbor with lowest edge cost that has F in InTree array
+		if(!InTree[neighbor]){
+			//Connect neighbor to parent node
+			candidate.addConnection(parent, child)
+		}
+		Update InTree[neighbor] = false
+		neighbor = new node.
+			
+		*/
+		
+		//rest of the code
+		int num_of_nodes = v_Nodes.size();	
+		
+		//Prim's Algorithm, create arrays
+		int[] Nearest;
+		int[] Parent;
+		boolean[] InTree;
+		Nearest = new int[num_of_nodes]; // smallest edge from current node to this node
+		Parent = new int[num_of_nodes]; //parent node of current node
+		InTree = new boolean[num_of_nodes]; // = F. T/F is this in our tree yet
+		
+		//Initialize arrays
+		//0 i
+		InTree[0] = true;
+		Parent[0] = -1;
+		for(int i = 1; i < num_of_nodes; i++){
+			Parent[i] = -7; //Initialize all except node 0 as childless
+			InTree[i] = false; //Only node 0 is  in tree
+		}
+		
+		int curnode = 0;
 		for(jj=0; jj < num_of_nodes ; jj++)
 		{
-			int t_id = pickNode.nextInt(v_Nodes.size());
+			//int t_id = pickNode.nextInt(v_Nodes.size());
 			
-			Node n = workingNodeLoc.chooseCloseNode(v_Nodes.get(t_id));
+			//Go through every node in the graph
+			Node n = v_Nodes.get(curnode);
+			int min_node = 0; //Node with minimum edge to our current node.
+			
 			if(n == null)
 			{
 				throw new Exception("ERROR - null node returned for choose close node");
 			}
 			else
 			{
-				//System.out.println("a real node returned for choose close node");
-				Edge ci = n.getConnectionInfo(v_Nodes.get(t_id));
-				canditate.addConnection(v_Nodes.get(t_id).getID(), n.getID(), ci.getWeight());
-				
-				//Remove from working NodeLoc so we don't hit it in random phase
-				workingNodeLoc.removeConnection(v_Nodes.get(t_id).getID(), n.getID());
-				
-				//System.out.println("v_Nodes.get(t_id).m_id is "+v_Nodes.get(t_id).m_id);
-				//System.out.println("t_id is "+t_id);
-				v_Nodes.remove(t_id);
-				//System.out.println("n.m_id is "+n.m_id);
-				//int t2 = v_Nodes.indexOf(n);
-				//System.out.println("t2 is "+t2);							
+				if(InTree[jj]) {
+					//Get all the neighboring nodes of this current node
+					//TreeMap<Integer, Edge> neighbors = n.getNeighbors();
+					//Find the minimum edge that isn't in our graph from this node
+					Edge min = new Edge(10000000);
+					for(int q = 0; q < num_of_nodes;  q++) {
+						//Find the minimum edge to a node that isn't in our tree
+						//Blake: This might take hella long, is there a faster way?
+						if(!InTree[q]) {
+							Edge e = n.getEdgeInfo(q);
+							if(e.getWeight() < min.getWeight()) {
+								min = e;
+								min_node = q;
+							}
+						}
+					}
+					Parent[min_node] = curnode; 
+					
+					//System.out.println("a real node returned for choose close node");
+					Edge ci = n.getConnectionInfo(v_Nodes.get(min_node));
+					canditate.addConnection(v_Nodes.get(min_node).getID(), n.getID(), ci.getWeight());
+					
+					//Remove from working NodeLoc so we don't hit it in random phase
+					workingNodeLoc.removeConnection(v_Nodes.get(min_node).getID(), n.getID());
+					
+					//System.out.println("v_Nodes.get(t_id).m_id is "+v_Nodes.get(t_id).m_id);
+					//System.out.println("t_id is "+t_id);
+					v_Nodes.remove(min_node);
+					//System.out.println("n.m_id is "+n.m_id);
+					//int t2 = v_Nodes.indexOf(n);
+					//System.out.println("t2 is "+t2);
+					curnode = min_node;
+				}
 			}
 		}
 		

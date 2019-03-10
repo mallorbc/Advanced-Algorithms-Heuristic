@@ -269,11 +269,11 @@ public class CreateGraph
 		    public int node_parent;
 		    
 		}
-		//used soley to make it easier to add ids to the Node_Edge_Info
+		//used solely to make it easier to add ids to the Node_Edge_Info
 		Vector<Integer> All_Ids = new Vector<>();
 		//Vector of type Node_Edge_Info, holds the values found
 		Vector <Node_Edge_Info> All_Node_data = new Vector<>();
-		//soley used to make it easier to intialize the values of the parents of the nodes
+		//solely used to make it easier to intialize the values of the parents of the nodes
 		Vector<Integer> Node_Parent = new Vector<>();
 
 		
@@ -288,6 +288,7 @@ public class CreateGraph
 		}
 		//Initializes data structure
 		//PROBABLY GOOD
+		//BLAKE: we should have a parent node that starts as being in the tree
 		for(int y = 0; y< num_of_nodes; y++) {
 			Node_Edge_Info Entry_Node = new Node_Edge_Info();
 			Entry_Node.InTree = false;
@@ -296,8 +297,8 @@ public class CreateGraph
 			All_Node_data.add(Entry_Node);
 			
 		}
-		//used to store the id of the current node
-		int current_node_id;
+		//used to store the id of the current node (start at 0)
+		int current_node_id = 0;
 		//used to store the id of the node that is found with chooseCloseNode; I think it is the closest node
 		int connection_node_id;
 		//Not used yet but would hold the value of whether or nor the current node is in the tree
@@ -308,25 +309,34 @@ public class CreateGraph
 		//TreeMap<Integer,Edge> node_connections;
 		//stores the edge data structure of the two nodes;  The weight of which can be found by calling getWeight()
 		Edge connection_weight;
+		//node that will be connected (if this original node is added we have an error)
+		Node connection_node = new Node(0, -1, -1);
 		//current node
-		Node connection_node;
-		//node that will be conected
 		Node current_node;
 		//loops for all nodes
 		for(int r = 0; r<num_of_nodes; r++) {
-			//finds a close(closest?) node for the current node
-			connection_node = workingNodeLoc.chooseCloseNode(v_Nodes.get(r));
-			//starts at id zero and gets the node
-			current_node = v_Nodes.get(r);
+			//get the node object for the ID we have
+			current_node = v_Nodes.get(current_node_id);
+			//get all the neighbors of this node
+			TreeMap<Integer, Edge> node_connections = current_node.getNeighbors();
+			//Now find the smallest neighbor that is not in the tree
+			//Edge for connected node (start with super high weight for our minimum weight finding)
+			Edge connection_edge = new Edge(1000000);
+			System.out.println("size of neighbors: " + node_connections.size());
+			//Start searching for closest neighbor not in tree
+			for(int h = 0; h < node_connections.size(); h++) {
+				//Make sure it is NOT in the tree and is the minimum neighbor
+				if((!All_Node_data.get(h).InTree) &(node_connections.get(h).getWeight() < connection_edge.getWeight())) {
+					connection_edge = node_connections.get(h);
+					connection_node = v_Nodes.get(h);
+				}
+			}
+			//TODO: for everything under this for loop, might want it to be conditional on whether we can actually add a node, as we  get to the end we might 
+			//not have any eligible neighbors.
 			//gets edge data structure from complete graph; can be used to find weight
-			connection_weight = connection_node.getConnectionInfo(v_Nodes.get(r));
-			//nice print for debuggin
+			connection_weight = connection_node.getConnectionInfo(v_Nodes.get(current_node_id));
+			//nice print for debugging
 			System.out.println("Current node: "+ current_node.getID() + " Connection_node:"+connection_node.getID() +" weight:"+connection_weight.getWeight());
-			//not currently used, may be usefuly for getting all neighbors
-			//node_connections = temp_node.getNeighbors();
-			//gets the current node id
-			current_node_id = current_node.getID();
-			//gets the connection node id
 			connection_node_id = connection_node.getID();
 			//adds the connection to the graph
 			canditate.addConnection(current_node_id, connection_node_id, connection_weight.getWeight());
@@ -335,7 +345,10 @@ public class CreateGraph
 			All_Node_data.get(connection_node_id).InTree = true;
 			All_Node_data.get(connection_node_id).node_parent = current_node_id;
 			//removes connection from complete graph; This is the cut?
+			//BLAKE: No, this isn't the cut
 			workingNodeLoc.removeConnection(current_node_id, connection_node_id);
+			//for the next part of the loop, start at this node
+			current_node = connection_node;
 			
 		}
 		//COMMENTED OUT REST OF CODE FOR DEBUGGING
@@ -344,10 +357,7 @@ public class CreateGraph
 		
 //		for(int i=0; i< num_of_nodes ; i++) {
 //			//Node_Parent.add(-1);
-//			
-//			
-//			
-//			
+//			//Don't want to chooose randomly, want to start at 0 and work our way along the tree
 //			Node temp_node = workingNodeLoc.chooseCloseNode(v_Nodes.get(i));
 //			//Node temp_node2 = null;
 //			int num_of_connections = temp_node.getDegree();

@@ -32,6 +32,25 @@ import psograph.util.Util;
 
 public class CreateGraph 
 {
+	
+	public Vector<Node> Remove_Node_Index_by_ID(int Id_to_remove,Vector<Node> Node_Vector) {
+		Vector<Node> modified_node_vector = Node_Vector;
+		Boolean found_Id = false;
+		int id_index = 0;
+		
+		for(int i = 0; i<modified_node_vector.size(); i++) {
+			if(modified_node_vector.get(i).getID() == Id_to_remove) {
+				id_index = i;
+				modified_node_vector.remove(i);
+				break;
+			}
+			
+		}
+		
+		System.out.println("Test function");
+		return modified_node_vector;
+		
+	}
 
 	//This is the directory where the Seed is generated.  The Seed is the Node configuration
 	//with no edges

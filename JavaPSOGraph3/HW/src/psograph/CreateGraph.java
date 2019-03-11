@@ -235,7 +235,7 @@ public class CreateGraph
 		
 		canditate = new Graph(m_graphSeed);
 		
-		Vector<Node> v_Nodes = new Vector<Node>(m_graphSeed.getHeaderNodesMap().values());
+		Vector<Node> v_Nodes = new Vector<Node>(workingNodeLoc.getHeaderNodesMap().values());
 		int jj;
 
 		//
@@ -321,11 +321,16 @@ public class CreateGraph
 			//Now find the smallest neighbor that is not in the tree
 			//Edge for connected node (start with super high weight for our minimum weight finding)
 			Edge connection_edge = new Edge(1000000);
-			System.out.println("size of neighbors: " + node_connections.size());
+			
 			//Start searching for closest neighbor not in tree
 			for(int h = 0; h < node_connections.size(); h++) {
+				//Update parent vector and make this the parent of that node
+				if(!All_Node_data.get(h).InTree) {
+					All_Node_data.get(h).node_parent = All_Node_data.get(current_node_id).node_id;
+				}
 				//Make sure it is NOT in the tree and is the minimum neighbor
-				//TODO: change this to instead update nearest data
+				//update nearest data
+				//TODO: node_connections.get(h).getWeight() throws nullptr
 				if((!All_Node_data.get(h).InTree) &(node_connections.get(h).getWeight() < connection_edge.getWeight())) {
 					//update nearest with the minimum that isn't in the tree
 					All_Node_data.get(current_node_id).nearest = All_Node_data.get(h).node_id;
@@ -347,6 +352,7 @@ public class CreateGraph
 				
 			}
 			//gets edge data structure from complete graph; can be used to find weight
+			//Do we really need to do this?
 			connection_weight = connection_node.getConnectionInfo(v_Nodes.get(current_node_id));
 			//nice print for debugging
 			System.out.println("Current node: "+ current_node.getID() + " Connection_node:"+connection_node_id +" weight:"+connection_weight.getWeight());

@@ -327,6 +327,7 @@ public class CreateGraph
 			//gets the node id
 			current_node_id = current_node.getID();
 			//get all the neighbors of this node
+			
 			TreeMap<Integer, Edge> node_connections = current_node.getNeighbors();
 			//Now find the smallest neighbor that is not in the tree
 			//Edge for connected node (start with super high weight for our minimum weight finding)
@@ -346,9 +347,9 @@ public class CreateGraph
 //					
 //				}
 				//Update parent vector and make this the parent of that node
-//				if(!All_Node_data.get(edge_index).InTree) {
-//					All_Node_data.get(edge_index).node_parent = All_Node_data.get(current_node_id).node_id;
-//				}
+				if(!All_Node_data.get(h).InTree) {
+					All_Node_data.get(h).node_parent = All_Node_data.get(current_node_id).node_id;
+				}
 				//you can't an edge to a node with the same id
 				current_edge = node_connections.get(edge_index);
 				if(current_edge==null) {
@@ -370,7 +371,7 @@ public class CreateGraph
 					//update nearest with the minimum that isn't in the tree
 					All_Node_data.get(current_node_id).nearest = All_Node_data.get(edge_index).node_id;
 					All_Node_data.get(current_node_id).nearest_weight = current_edge.getWeight();
-					All_Node_data.get(edge_index).node_parent = current_node_id;
+					//All_Node_data.get(edge_index).node_parent = current_node_id;
 					lowest_connection_edge = current_edge;
 					
 				}
@@ -383,13 +384,13 @@ public class CreateGraph
 //			parent_id_to_add = All_Node_data.get(r).node_parent;
 			parent_id_to_add = All_Node_data.get(node_id_to_add).node_parent;
 			if(!All_Node_data.get(node_id_to_add).InTree && !All_Node_data.get(node_id_to_add).IsParent) {
-			canditate.addConnection(parent_id_to_add,node_id_to_add,connection_weight_canidate);
-			All_Node_data.get(node_id_to_add).InTree = true;
-			//adding or removing this radically changes graph
-			//All_Node_data.get(parent_id_to_add).IsParent = true;
-			All_Node_data.get(node_id_to_add).node_parent=current_node_id;
-			workingNodeLoc.removeConnection(parent_id_to_add, node_id_to_add);
-			current_node_id = node_id_to_add;
+				canditate.addConnection(parent_id_to_add,node_id_to_add,connection_weight_canidate);
+				All_Node_data.get(node_id_to_add).InTree = true;
+				//adding or removing this radically changes graph
+				//All_Node_data.get(parent_id_to_add).IsParent = true;
+				All_Node_data.get(node_id_to_add).node_parent=current_node_id;
+				workingNodeLoc.removeConnection(parent_id_to_add, node_id_to_add);
+				current_node_id = node_id_to_add;
 			}
 			
 		}

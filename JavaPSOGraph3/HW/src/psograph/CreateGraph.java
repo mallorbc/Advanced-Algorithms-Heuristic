@@ -323,7 +323,7 @@ public class CreateGraph
 		//loops for all nodes and finds there minimum connection to start
 		for(int r = 0; r<num_of_nodes; r++) {
 			//get the node object for the ID we have
-			current_node = v_Nodes.get(r);
+			current_node = v_Nodes.get(current_node_id);
 			//gets the node id
 			current_node_id = current_node.getID();
 			//get all the neighbors of this node
@@ -379,7 +379,7 @@ public class CreateGraph
 			int parent_id_to_add;
 			int node_id_to_add;
 			double connection_weight_canidate = lowest_connection_edge.getWeight();
-			node_id_to_add = All_Node_data.get(r).nearest;
+			node_id_to_add = All_Node_data.get(current_node_id).nearest;
 //			parent_id_to_add = All_Node_data.get(r).node_parent;
 			parent_id_to_add = All_Node_data.get(node_id_to_add).node_parent;
 			if(!All_Node_data.get(node_id_to_add).InTree && !All_Node_data.get(node_id_to_add).IsParent) {
@@ -387,8 +387,9 @@ public class CreateGraph
 			All_Node_data.get(node_id_to_add).InTree = true;
 			//adding or removing this radically changes graph
 			//All_Node_data.get(parent_id_to_add).IsParent = true;
-			All_Node_data.get(node_id_to_add).node_parent=r;
+			All_Node_data.get(node_id_to_add).node_parent=current_node_id;
 			workingNodeLoc.removeConnection(parent_id_to_add, node_id_to_add);
+			current_node_id = node_id_to_add;
 			}
 			
 		}

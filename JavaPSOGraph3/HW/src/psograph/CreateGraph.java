@@ -51,6 +51,8 @@ public class CreateGraph
 		return modified_node_vector;
 		
 	}
+	
+
 
 	//This is the directory where the Seed is generated.  The Seed is the Node configuration
 	//with no edges
@@ -264,8 +266,10 @@ public class CreateGraph
 		class Node_Edge_Info{
 		    public int node_id;
 		    public int nearest;
+		    public double nearest_weight;
 		    public Boolean InTree;
 		    public int node_parent;
+		    public Boolean IsParent;
 		    
 		}
 		//used solely to make it easier to add ids to the Node_Edge_Info
@@ -293,6 +297,7 @@ public class CreateGraph
 			Entry_Node.InTree = false;
 			Entry_Node.node_parent = -1;
 			Entry_Node.node_id = All_Ids.get(y);
+			Entry_Node.IsParent = false;
 			All_Node_data.add(Entry_Node);
 			
 		}
@@ -306,67 +311,124 @@ public class CreateGraph
 		int current_node_parent;
 		//Fairly certain this is not needed; keeping here just in case
 		//TreeMap<Integer,Edge> node_connections;
-		//stores the edge data structure of the two nodes;  The weight of which can be found by calling getWeight()
+		//stores the edge data structure of the two nodes;  The weight of which can be found by calling getWeight();
 		Edge connection_weight;
 		//node that will be connected (if this original node is added we have an error)
 		Node connection_node = new Node(0, -1, -1);
 		//current node
 		Node current_node;
-		//loops for all nodes
+		//a node needs to be in the tree to start, zero will be that node
+		All_Node_data.get(0).InTree = true;
+		All_Node_data.get(0).node_parent = 0;
+		//loops for all nodes and finds there minimum connection to start
 		for(int r = 0; r<num_of_nodes; r++) {
 			//get the node object for the ID we have
-			current_node = v_Nodes.get(current_node_id);
+			current_node = v_Nodes.get(r);
+			//gets the node id
+			current_node_id = current_node.getID();
 			//get all the neighbors of this node
 			TreeMap<Integer, Edge> node_connections = current_node.getNeighbors();
 			//Now find the smallest neighbor that is not in the tree
 			//Edge for connected node (start with super high weight for our minimum weight finding)
-			Edge connection_edge = new Edge(1000000);
-			
+			Edge lowest_connection_edge = new Edge(1000000);
+			//used to store the current_edge that will be tested
+			Edge current_edge = new Edge(100000);
+			//You can't get an edge with an id of the current node, this value will be used to prevent that
+			int edge_index;
 			//Start searching for closest neighbor not in tree
 			for(int h = 0; h < node_connections.size(); h++) {
+				edge_index = h;
+//				if(h==r) {
+//					edge_index = edge_index + 1;
+//					if(edge_index>node_connections.size()) {
+//						edge_index = 0;
+//					}
+//					
+//				}
 				//Update parent vector and make this the parent of that node
-				if(!All_Node_data.get(h).InTree) {
-					All_Node_data.get(h).node_parent = All_Node_data.get(current_node_id).node_id;
+//				if(!All_Node_data.get(edge_index).InTree) {
+//					All_Node_data.get(edge_index).node_parent = All_Node_data.get(current_node_id).node_id;
+//				}
+				//you can't an edge to a node with the same id
+				current_edge = node_connections.get(edge_index);
+				if(current_edge==null) {
+					while(current_edge == null) {
+						edge_index++;
+						if(edge_index>node_connections.size()) {
+							edge_index =0;
+						}
+						if(All_Node_data.get(edge_index).InTree) {
+							edge_index++;
+						}
+						current_edge = node_connections.get(edge_index);	
+					}
+					System.out.println("Current edge is null, expect an error");
 				}
 				//Make sure it is NOT in the tree and is the minimum neighbor
 				//update nearest data
-				//TODO: node_connections.get(h).getWeight() throws nullptr
-				if((!All_Node_data.get(h).InTree) &(node_connections.get(h).getWeight() < connection_edge.getWeight())) {
+				if((!All_Node_data.get(edge_index).InTree) && (current_edge.getWeight() < lowest_connection_edge.getWeight())) {
 					//update nearest with the minimum that isn't in the tree
-					All_Node_data.get(current_node_id).nearest = All_Node_data.get(h).node_id;
+					All_Node_data.get(current_node_id).nearest = All_Node_data.get(edge_index).node_id;
+					All_Node_data.get(current_node_id).nearest_weight = current_edge.getWeight();
+					All_Node_data.get(edge_index).node_parent = current_node_id;
+					lowest_connection_edge = current_edge;
 					
-				}
-			}
-			//search through nearest to find smallest edge
-			double min_weight = 1000000;
-			for(int z = 0; z < All_Node_data.size(); z++) {
-				//go through every node and look at the weight to its nearest edge
-				connection_weight = v_Nodes.get(All_Node_data.get(z).node_id).getConnectionInfo(v_Nodes.get(All_Node_data.get(z).nearest));
-				if(connection_weight.getWeight() < min_weight) {
-					min_weight = connection_weight.getWeight();
-					//Choose our connection node to be the minimum
-					connection_edge = node_connections.get(z);
-					connection_node_id = All_Node_data.get(z).nearest;
-					current_node_id = All_Node_data.get(z).node_id;
 				}
 				
 			}
-			//gets edge data structure from complete graph; can be used to find weight
-			//Do we really need to do this?
-			connection_weight = connection_node.getConnectionInfo(v_Nodes.get(current_node_id));
-			//nice print for debugging
-			System.out.println("Current node: "+ current_node.getID() + " Connection_node:"+connection_node_id +" weight:"+connection_weight.getWeight());
-			//adds the connection to the graph
-			canditate.addConnection(current_node_id, connection_node_id, connection_weight.getWeight());
-			//adds the relevant data to the custom structure vector, build if statements off this data
-			All_Node_data.get(current_node_id).InTree = true;
-			All_Node_data.get(connection_node_id).InTree = true;
-			All_Node_data.get(connection_node_id).node_parent = current_node_id;
-			//removes connection from complete graph.
-			workingNodeLoc.removeConnection(current_node_id, connection_node_id);
-			//for the next part of the loop, start at this node
-			current_node_id = connection_node_id;
+			int parent_id_to_add;
+			int node_id_to_add;
+			double connection_weight_canidate = lowest_connection_edge.getWeight();
+			node_id_to_add = All_Node_data.get(r).nearest;
+//			parent_id_to_add = All_Node_data.get(r).node_parent;
+			parent_id_to_add = All_Node_data.get(node_id_to_add).node_parent;
+			if(!All_Node_data.get(node_id_to_add).InTree && !All_Node_data.get(node_id_to_add).IsParent) {
+			canditate.addConnection(parent_id_to_add,node_id_to_add,connection_weight_canidate);
+			All_Node_data.get(node_id_to_add).InTree = true;
+			//adding or removing this radically changes graph
+			//All_Node_data.get(parent_id_to_add).IsParent = true;
+			All_Node_data.get(node_id_to_add).node_parent=r;
+			workingNodeLoc.removeConnection(parent_id_to_add, node_id_to_add);
+			}
+			
 		}
+		System.out.println("test");
+			//search through nearest to find smallest edge
+//			double min_weight = 1000000;
+//			for(int z = 0; z < All_Node_data.size(); z++) {
+//				//go through every node and look at the weight to its nearest edge
+//				connection_weight = v_Nodes.get(All_Node_data.get(z).node_id).getConnectionInfo(v_Nodes.get(All_Node_data.get(z).nearest));
+//				if(connection_weight.getWeight() < min_weight) {
+//					min_weight = connection_weight.getWeight();
+//					//Choose our connection node to be the minimum
+//					connection_edge = node_connections.get(z);
+//					connection_node_id = All_Node_data.get(z).nearest;
+//					current_node_id = All_Node_data.get(z).node_id;
+//				}
+//				
+//			}
+//			//gets edge data structure from complete graph; can be used to find weight
+//			//Do we really need to do this?
+//			connection_weight = connection_node.getConnectionInfo(v_Nodes.get(current_node_id));
+//			//nice print for debugging
+//			System.out.println("Current node: "+ current_node.getID() + " Connection_node:"+connection_node_id +" weight:"+connection_weight.getWeight());
+//			//adds the connection to the graph
+//			canditate.addConnection(current_node_id, connection_node_id, connection_weight.getWeight());
+//			//adds the relevant data to the custom structure vector, build if statements off this data
+//			All_Node_data.get(current_node_id).InTree = true;
+//			All_Node_data.get(connection_node_id).InTree = true;
+//			All_Node_data.get(connection_node_id).node_parent = current_node_id;
+//			//removes connection from complete graph.
+//			workingNodeLoc.removeConnection(current_node_id, connection_node_id);
+//			//for the next part of the loop, start at this node
+//			current_node_id = connection_node_id;
+//		}
+		
+		
+		
+		
+		
+		
 		//COMMENTED OUT REST OF CODE FOR DEBUGGING
 		//System.out.println("End of builing data structure");
 		

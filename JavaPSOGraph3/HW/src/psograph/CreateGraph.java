@@ -326,14 +326,47 @@ public class CreateGraph
 		}
 		System.out.println("Arrays fully updated");
 		int counter = 0;
+		//Go through and connect every node to its parent
 		for(int q = 0; q < num_of_nodes; q++) {
 			if(All_Node_data.get(q).node_parent != -1) {
-				
 				MST_candidate.addConnection(q, All_Node_data.get(q).node_parent);
 				counter++;
 			}
 		}
 		System.out.println("edges added: "+counter);
+		//TODO: add more with our heuristic
+		Graph Heuristic_candidate = new Graph(m_graphSeed);
+		Vector<Node> mst_Nodes = new Vector<Node>(MST_candidate.getHeaderNodesMap().values());
+		//TODO: find average node length in our current MST
+		//Get a vector of all the nodes in the MST
+		int average_count = 0;
+//		for(int y = 0; y < num_of_nodes; y++) {
+//			
+//		}
+		//TODO: Search all neighbors and add any that are below calculated average
+		//For now, use 0.05 as optimal distance
+		Node mst_node;
+		for(int y = 0; y < num_of_nodes; y++) {
+			//Retrieve next node in both our well connected graph and our MST
+			current_node = v_Nodes.get(y);
+			//The MST nodes are not connected to all neighbors
+			mst_node = mst_Nodes.get(y);
+			//get all the neighbors of this node
+			TreeMap<Integer, Edge> node_connections = current_node.getNeighbors();
+			//And create an iterator to go through them all
+			Iterator<Integer> neighbors = node_connections.keySet().iterator();
+			//go through each neighbor
+			while(neighbors.hasNext()) {
+				id = neighbors.next();
+				//If the weight is less than 0.05, we connect them together.
+				if(current_node.getEdgeInfo(id).getWeight() < 0.05) {
+					MST_candidate.addConnection(y, id);
+				}
+				
+			}
+			
+		}
+		
 		canditate = MST_candidate;
 	}
 	

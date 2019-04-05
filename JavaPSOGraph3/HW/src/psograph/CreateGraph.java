@@ -334,17 +334,11 @@ public class CreateGraph
 			}
 		}
 		System.out.println("edges added: "+counter);
-		//TODO: add more with our heuristic
+		
+		//Now add more with our heuristic
 		Graph Heuristic_candidate = new Graph(m_graphSeed);
+		//Get all the nodes in our MST currently
 		Vector<Node> mst_Nodes = new Vector<Node>(MST_candidate.getHeaderNodesMap().values());
-		//TODO: find average node length in our current MST
-		//Get a vector of all the nodes in the MST
-		int average_count = 0;
-//		for(int y = 0; y < num_of_nodes; y++) {
-//			
-//		}
-		//TODO: Search all neighbors and add any that are below calculated average
-		//For now, use 0.05 as optimal distance
 		Node mst_node;
 		for(int y = 0; y < num_of_nodes; y++) {
 			//Retrieve next node in both our well connected graph and our MST

@@ -401,6 +401,17 @@ public class CreateGraph
 		//TO DO: will start the next part of algorithm here
 		
 		//part1:
+		int largest_vector_size = -1;
+		int largest_vector_id = -1;
+		Vector<Integer>highly_connected_node;
+		for(int i = 0; i<200;i++) {
+			highly_connected_node = total_node_connections_in_graph.get(i);
+			if(highly_connected_node.size()>largest_vector_size) {
+				largest_vector_size = highly_connected_node.size();
+				largest_vector_id = i;
+			}
+		}
+		System.out.println("The most connected node is node " + largest_vector_id);
 		
 		
 		//part2:

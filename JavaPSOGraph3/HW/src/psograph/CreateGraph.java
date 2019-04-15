@@ -365,8 +365,91 @@ public class CreateGraph
 			
 		}
 		//TO DO: will start the next part of algorithm here
+		//used to test fitness
+		CalculatedGraph test_fitness_graph;
+		//holds fitness values
+		double best_graph_fitness;
+		double test_graph_fitness;
+		//best graph and the modified graph
+		Graph best_graph;
+		Graph test_graph;
+		//used to test connection status
+		Node test_node;
+		//gets random ids
+		int random_id1;
+		int random_id2;
 		
-		canditate = MST_candidate;
+		//gets the starting fitness value
+		//holds best graph, to start that is the modified mst
+		best_graph = new Graph(m_graphSeed);
+		//will hold the modified graph
+		test_graph = new Graph(m_graphSeed);
+		//sets the starting value
+		best_graph = MST_candidate;
+		//test graph is the same as best graph to start
+		test_graph = best_graph;
+		//inatilizng tester
+		test_fitness_graph = new CalculatedGraph(test_graph);
+		test_fitness_graph.setCostBasis(m_basisCost);
+		test_fitness_graph.UpdatePSOCalculations();
+		best_graph_fitness = test_fitness_graph.getFitnessValue();
+		test_graph_fitness = best_graph_fitness;
+		
+		//loops until a key is pressed
+		while(System.in.available() == 0){
+			//test_graph = best_graph;
+//			test_graph = new Graph(m_graphSeed);
+//			test_graph = best_graph;
+			
+			Random random_num_generator = new Random();
+			//picks 2 random numbers between 0 and 199
+			random_id1 = random_num_generator.nextInt(199);
+			random_id2 = random_num_generator.nextInt(199);
+			//ensures the same id isn't possible
+			if(random_id1 == random_id2) {
+				random_id2++;
+				if(random_id2==200) {
+					random_id2 = 0;
+				}
+			}
+			//need to see if node has connection
+			test_node = test_graph.getNode(random_id1);
+			//if connected
+			if(test_node.isConnectedTo(random_id2)) {
+				test_graph.removeConnection(random_id1, random_id2);
+				//making a new graph out of debugging desperation
+				test_fitness_graph = new CalculatedGraph(test_graph);
+				test_fitness_graph.setCostBasis(m_basisCost);
+				test_fitness_graph.UpdatePSOCalculations();
+				test_graph_fitness = test_fitness_graph.getFitnessValue();
+			}
+			//if not connected
+			else {
+				test_graph.addConnection(random_id1, random_id2);
+				//making a new graph out of debugging desperation
+				test_fitness_graph = new CalculatedGraph(test_graph);
+				test_fitness_graph.setCostBasis(m_basisCost);
+				test_fitness_graph.UpdatePSOCalculations();
+				test_graph_fitness = test_fitness_graph.getFitnessValue();
+			}
+			if(test_graph_fitness>best_graph_fitness) {
+				best_graph = test_graph;
+				best_graph_fitness = test_graph_fitness;
+			}
+			else {
+				//test_graph = best_graph;
+				//making a new graph out of debugging desperation
+				test_graph = new Graph(m_graphSeed);
+				test_graph = best_graph;
+				
+			}
+			System.out.println("Best fitness is "+best_graph_fitness + "  Test Fitness is " + test_graph_fitness);
+			
+			//System.out.println("Looping still...");
+		}
+		System.out.println("Broken out of loop");
+		canditate = best_graph;
+		//canditate = MST_candidate;
 	}
 	
 	
@@ -391,6 +474,10 @@ public class CreateGraph
 					connnectCandidate2();
 					measureAndOutputCandidate();					  
 				}
+				CalculatedGraph test = new CalculatedGraph(canditate);
+				test.setCostBasis(m_basisCost);
+				test.UpdatePSOCalculations();
+				System.out.println(test.getFitnessValue());
 			}
 		}
 		catch (Exception e)

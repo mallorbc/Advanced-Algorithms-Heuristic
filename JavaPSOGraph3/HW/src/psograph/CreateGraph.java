@@ -356,7 +356,7 @@ public class CreateGraph
 				id = neighbors.next();
 				node_of_id = MST_candidate.getNode(id);
 				node_of_y = MST_candidate.getNode(y);
-				//If the weight is less than 0.05, we connect them together.
+				//If the weight is less than 0.05, and not a current connection, we connect them together.
 				if(current_node.getEdgeInfo(id).getWeight() < 0.05  && !node_of_y.isConnectedTo(id)) {
 					MST_candidate.addConnection(y, id);
 				}
@@ -364,6 +364,7 @@ public class CreateGraph
 			}
 			
 		}
+		//TO DO: will start the next part of algorithm here
 		
 		canditate = MST_candidate;
 	}

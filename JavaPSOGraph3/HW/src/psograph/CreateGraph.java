@@ -340,6 +340,8 @@ public class CreateGraph
 		//Get all the nodes in our MST currently
 		Vector<Node> mst_Nodes = new Vector<Node>(MST_candidate.getHeaderNodesMap().values());
 		Node mst_node;
+		Node node_of_id;
+		Node node_of_y;
 		for(int y = 0; y < num_of_nodes; y++) {
 			//Retrieve next node in both our well connected graph and our MST
 			current_node = v_Nodes.get(y);
@@ -352,8 +354,10 @@ public class CreateGraph
 			//go through each neighbor
 			while(neighbors.hasNext()) {
 				id = neighbors.next();
+				node_of_id = MST_candidate.getNode(id);
+				node_of_y = MST_candidate.getNode(y);
 				//If the weight is less than 0.05, we connect them together.
-				if(current_node.getEdgeInfo(id).getWeight() < 0.05) {
+				if(current_node.getEdgeInfo(id).getWeight() < 0.05  && !node_of_y.isConnectedTo(id)) {
 					MST_candidate.addConnection(y, id);
 				}
 				

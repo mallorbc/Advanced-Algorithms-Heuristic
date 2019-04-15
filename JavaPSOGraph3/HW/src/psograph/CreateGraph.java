@@ -236,9 +236,14 @@ public class CreateGraph
 		Graph MST_candidate = new Graph(m_graphSeed);
 		
 		//Hash map with node id as key and a vector of connected nodes as the value
-		TreeMap<Integer,Vector<Integer>>total_node_connections_in_graph;
+		TreeMap<Integer,Vector<Integer>>total_node_connections_in_graph = new TreeMap<Integer,Vector<Integer>>();
 		//this will be used to store the vector of the above hashmap
-		Vector<Integer>node_connection_id;
+		Vector<Integer>nodes_connected_to;
+		//initializes the nodes 0 to 199 with empty vectors
+		for(int i = 0; i<200; i++) {
+			nodes_connected_to = new Vector<Integer>();
+			total_node_connections_in_graph.put(i, nodes_connected_to);
+		}
 		//Gets get number of nodes
 		int num_of_nodes = v_Nodes.size();
 		//used to store information about the connection, may not be needed, may be thought as Nearest[]
@@ -367,11 +372,25 @@ public class CreateGraph
 					//if not a current connection
 					if(!node_of_y.isConnectedTo(id)) {
 						MST_candidate.addConnection(y, id);
-						//add to data structure
+						//adds the connection for key y
+						nodes_connected_to = total_node_connections_in_graph.get(y);
+						nodes_connected_to.add(id);
+						total_node_connections_in_graph.put(y, nodes_connected_to);
+						//adds the connection for key id
+						nodes_connected_to = total_node_connections_in_graph.get(id);
+						nodes_connected_to.add(y);
+						total_node_connections_in_graph.put(id,nodes_connected_to);
 					}
 					//else was already part of MST
 					else {
-						//add to data structure
+						//adds the connection for key y
+						nodes_connected_to = total_node_connections_in_graph.get(y);
+						nodes_connected_to.add(id);
+						total_node_connections_in_graph.put(y, nodes_connected_to);
+						//adds the connection for key id
+						nodes_connected_to = total_node_connections_in_graph.get(id);
+						nodes_connected_to.add(y);
+						total_node_connections_in_graph.put(id,nodes_connected_to);
 					}
 					
 				}

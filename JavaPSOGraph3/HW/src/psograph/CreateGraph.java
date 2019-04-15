@@ -235,6 +235,10 @@ public class CreateGraph
 		Vector<Node> v_Nodes = new Vector<Node>(workingNodeLoc.getHeaderNodesMap().values());
 		Graph MST_candidate = new Graph(m_graphSeed);
 		
+		//Hash map with node id as key and a vector of connected nodes as the value
+		TreeMap<Integer,Vector<Integer>>total_node_connections_in_graph;
+		//this will be used to store the vector of the above hashmap
+		Vector<Integer>node_connection_id;
 		//Gets get number of nodes
 		int num_of_nodes = v_Nodes.size();
 		//used to store information about the connection, may not be needed, may be thought as Nearest[]

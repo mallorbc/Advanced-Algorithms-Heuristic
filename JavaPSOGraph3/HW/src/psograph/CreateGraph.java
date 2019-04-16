@@ -489,6 +489,7 @@ public class CreateGraph
 				if(test_node.isConnectedTo(nodes_connected_to.get(i))) {
 					//removes the node connection
 					test_graph.removeConnection(largest_vector_id, nodes_connected_to.get(i));
+					//UPDATE TOTAL_NODE_CONNECTIONS
 					//tests the new fitness value
 					test_fitness_graph = new CalculatedGraph(test_graph);
 					test_fitness_graph.setCostBasis(m_basisCost);
@@ -530,7 +531,7 @@ public class CreateGraph
 			//if connected
 			if(test_node.isConnectedTo(random_id2)) {
 				test_graph.removeConnection(random_id1, random_id2);
-				//making a new graph out of debugging desperation
+				//UPDATE TOTAL_NODE_CONNECTIONS
 				test_fitness_graph = new CalculatedGraph(test_graph);
 				test_fitness_graph.setCostBasis(m_basisCost);
 				test_fitness_graph.UpdatePSOCalculations();
@@ -539,7 +540,7 @@ public class CreateGraph
 			//if not connected
 			else {
 				test_graph.addConnection(random_id1, random_id2);
-				//making a new graph out of debugging desperation
+				//UPDATE TOTAL_NODE_CONNECTIONS
 				test_fitness_graph = new CalculatedGraph(test_graph);
 				test_fitness_graph.setCostBasis(m_basisCost);
 				test_fitness_graph.UpdatePSOCalculations();

@@ -468,8 +468,12 @@ public class CreateGraph
 			int largest_vector_id = -1;
 			//maybe loop through a hash map here for optimization? don't loop through values already checked
 			for(int i=0;i<200;i++) {
+				//skips already processed nodes
+				if(is_in_map(i,map_checked_nodes)) {
+					continue;
+				}
+				//vector of node connection to node id i
 				highly_connected_node = total_node_connections_in_graph.get(i);
-				//maybe use a hash map here to optimize for is_in_vector
 				//finds the largest vector of node connections that hasn't already checked
 				if(highly_connected_node.size()>largest_vector_size && !is_in_map(i,map_checked_nodes)) {
 					largest_vector_size = highly_connected_node.size();
@@ -477,7 +481,7 @@ public class CreateGraph
 				}
 			}
 			System.out.println("Largest node is "+ largest_vector_id);
-			System.out.println("Largest node has "+ largest_vector_size+" nodes");
+			System.out.println("Largest node has "+ largest_vector_size+" node connections");
 			System.out.println(201-loop_value+" nodes processed");
 		
 		//gets all the nodes from that found largest vector that hasn't already been checked
@@ -499,6 +503,7 @@ public class CreateGraph
 				if(test_graph_fitness>best_graph_fitness) {
 					best_graph = new Graph(test_graph);
 					best_graph_fitness = test_graph_fitness;
+					System.out.println("New best fitness is: "+best_graph_fitness);
 				}
 				else {
 					test_graph = new Graph(best_graph);
@@ -550,6 +555,7 @@ public class CreateGraph
 				best_graph = new Graph(test_graph);
 				//canditate = new Graph(test_graph);
 				best_graph_fitness = test_graph_fitness;
+				System.out.println("New best fitness is: "+best_graph_fitness);
 			}
 			else {
 				//test_graph = best_graph;
@@ -558,7 +564,7 @@ public class CreateGraph
 				//test_graph = canditate;
 				
 			}
-			System.out.println("Best fitness is "+best_graph_fitness + "  Test Fitness is " + test_graph_fitness);
+			//System.out.println("Best fitness is "+best_graph_fitness + "  Test Fitness is " + test_graph_fitness);
 			
 			//System.out.println("Looping still...");
 		}

@@ -76,6 +76,17 @@ public class CreateGraph
 		m_SeedDirectory = new File("C:\\TestHeuristic3\\StandardStartingPoint");
 	}
 	
+	public Boolean is_in_vector(int id_to_look_for,Vector<Integer>vector_to_search) {
+		Boolean return_value = false;
+		
+		for(int i = 0;i<vector_to_search.size();i++) {
+			if(vector_to_search.get(i) == id_to_look_for) {
+				return true;
+			}
+		}
+		return return_value;
+	}
+	
 	private void generateSeed() throws Exception
 	{
 		/* commenting out to use standardized seed
@@ -345,6 +356,8 @@ public class CreateGraph
 		}
 		System.out.println("edges added: "+counter);
 		
+		
+		
 		//Now add more with our heuristic
 		Graph Heuristic_candidate = new Graph(m_graphSeed);
 		//Get all the nodes in our MST currently
@@ -398,23 +411,10 @@ public class CreateGraph
 			}
 			
 		}
-		//TO DO: will start the next part of algorithm here
-		
-		//part1:
-		int largest_vector_size = -1;
-		int largest_vector_id = -1;
-		Vector<Integer>highly_connected_node;
-		for(int i = 0; i<200;i++) {
-			highly_connected_node = total_node_connections_in_graph.get(i);
-			if(highly_connected_node.size()>largest_vector_size) {
-				largest_vector_size = highly_connected_node.size();
-				largest_vector_id = i;
-			}
-		}
-		System.out.println("The most connected node is node " + largest_vector_id);
+
 		
 		
-		//part2:
+		//variables for algorithms
 		//used to test fitness
 		CalculatedGraph test_fitness_graph;
 		//holds fitness values
@@ -431,20 +431,77 @@ public class CreateGraph
 		
 		//gets the starting fitness value
 		//holds best graph, to start that is the modified mst
-		best_graph = new Graph(m_graphSeed);
+		best_graph = new Graph(MST_candidate);
 		//will hold the modified graph
-		test_graph = new Graph(m_graphSeed);
+		test_graph = new Graph(best_graph);
 		//sets the starting value
 		best_graph = MST_candidate;
 		//test graph is the same as best graph to start
 		test_graph = best_graph;
-		//inatilizng tester
+		
+		//inatilizng tester variables
 		test_fitness_graph = new CalculatedGraph(test_graph);
 		test_fitness_graph.setCostBasis(m_basisCost);
 		test_fitness_graph.UpdatePSOCalculations();
 		best_graph_fitness = test_fitness_graph.getFitnessValue();
 		test_graph_fitness = best_graph_fitness;
 		
+		//part1:
+		Vector<Integer>highly_connected_node;
+		//Vector<Integer>order_of_connections = new Vector<Integer>();
+		Vector<Integer>checked_nodes = new Vector<Integer>();
+		//number of nodes to check if removing connections would help
+		int loop_value = 200;
+		while(loop_value>1) {
+			//initializes variables that are
+			int largest_vector_size = -1;
+			int largest_vector_id = -1;
+			//maybe loop through a hash map here for optimization?
+			for(int i=0;i<200;i++) {
+				highly_connected_node = total_node_connections_in_graph.get(i);
+				//maybe use a hash map here to optimize for is_in_vector
+				//finds the largest vector of node connections that hasn't already checked
+				if(highly_connected_node.size()>largest_vector_size && !is_in_vector(i,checked_nodes)) {
+					largest_vector_size = highly_connected_node.size();
+					largest_vector_id = i;
+				}
+			}
+			System.out.println("Largest node is "+ largest_vector_id);
+			System.out.println("Largest node has "+ largest_vector_size+" nodes");
+			System.out.println(201-loop_value+" nodes processed");
+		
+		//gets all the nodes from that found largest vector that hasn't already been checked
+			nodes_connected_to = total_node_connections_in_graph.get(largest_vector_id);
+			for(int i=0;i<nodes_connected_to.size();i++) {
+				//node to remove
+				test_node = test_graph.getNode(largest_vector_id);
+				//makes sure already connected before removing
+				if(test_node.isConnectedTo(nodes_connected_to.get(i))) {
+					//removes the node connection
+					test_graph.removeConnection(largest_vector_id, nodes_connected_to.get(i));
+					//tests the new fitness value
+					test_fitness_graph = new CalculatedGraph(test_graph);
+					test_fitness_graph.setCostBasis(m_basisCost);
+					test_fitness_graph.UpdatePSOCalculations();
+					test_graph_fitness = test_fitness_graph.getFitnessValue();
+					//if better than the previous best
+				if(test_graph_fitness>best_graph_fitness) {
+					best_graph = new Graph(test_graph);
+					best_graph_fitness = test_graph_fitness;
+				}
+				else {
+					test_graph = new Graph(best_graph);
+				}
+			}
+			
+		}
+		//adds it to already checked nodes
+		checked_nodes.add(largest_vector_id);
+		loop_value--;
+		}
+		
+			
+		//part2:
 		//loops until a key is pressed
 		while(System.in.available() == 0){			
 			Random random_num_generator = new Random();

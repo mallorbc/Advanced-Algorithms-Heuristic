@@ -87,6 +87,13 @@ public class CreateGraph
 		return return_value;
 	}
 	
+	public Boolean is_in_map(int id_to_look_for, TreeMap<Integer,Boolean>map_to_search) {
+		Boolean return_value = false;
+		Boolean map_value = map_to_search.get(id_to_look_for);
+		return_value = map_value;
+		return return_value;
+	}
+	
 	private void generateSeed() throws Exception
 	{
 		/* commenting out to use standardized seed
@@ -448,20 +455,23 @@ public class CreateGraph
 		
 		//part1:
 		Vector<Integer>highly_connected_node;
-		//Vector<Integer>order_of_connections = new Vector<Integer>();
-		Vector<Integer>checked_nodes = new Vector<Integer>();
+		//hash map to keep track of checked nodes
+		TreeMap<Integer,Boolean>map_checked_nodes = new TreeMap<Integer,Boolean>();
+		for(int i=0;i<200;i++) {
+			map_checked_nodes.put(i, false);
+		}
 		//number of nodes to check if removing connections would help
 		int loop_value = 200;
 		while(loop_value>1) {
 			//initializes variables that are
 			int largest_vector_size = -1;
 			int largest_vector_id = -1;
-			//maybe loop through a hash map here for optimization?
+			//maybe loop through a hash map here for optimization? don't loop through values already checked
 			for(int i=0;i<200;i++) {
 				highly_connected_node = total_node_connections_in_graph.get(i);
 				//maybe use a hash map here to optimize for is_in_vector
 				//finds the largest vector of node connections that hasn't already checked
-				if(highly_connected_node.size()>largest_vector_size && !is_in_vector(i,checked_nodes)) {
+				if(highly_connected_node.size()>largest_vector_size && !is_in_map(i,map_checked_nodes)) {
 					largest_vector_size = highly_connected_node.size();
 					largest_vector_id = i;
 				}
@@ -496,7 +506,7 @@ public class CreateGraph
 			
 		}
 		//adds it to already checked nodes
-		checked_nodes.add(largest_vector_id);
+		map_checked_nodes.put(largest_vector_id, true);
 		loop_value--;
 		}
 		

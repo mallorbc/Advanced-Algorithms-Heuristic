@@ -422,6 +422,9 @@ public class CreateGraph
 		
 		
 		//variables for algorithms
+		long start_time = 0;
+		long end_time = 0;
+		long elapsed_time = 0;
 		//used to test fitness
 		CalculatedGraph test_fitness_graph;
 		//holds fitness values
@@ -519,7 +522,8 @@ public class CreateGraph
 			
 		//part2:
 		//loops until a key is pressed
-		while(System.in.available() == 0){			
+		start_time = System.currentTimeMillis();
+		while(System.in.available() == 0){	
 			Random random_num_generator = new Random();
 			//picks 2 random numbers between 0 and 199
 			random_id1 = random_num_generator.nextInt(199);
@@ -555,12 +559,17 @@ public class CreateGraph
 				best_graph = new Graph(test_graph);
 				//canditate = new Graph(test_graph);
 				best_graph_fitness = test_graph_fitness;
+				start_time = System.currentTimeMillis();
 				System.out.println("New best fitness is: "+best_graph_fitness);
 			}
 			else {
 				//test_graph = best_graph;
 				//making a new graph out of debugging desperation
 				test_graph = new Graph(best_graph);
+				end_time = System.currentTimeMillis();
+				elapsed_time = (end_time-start_time)/1000;
+				//time is a rough estimate
+				System.out.println("Fitness = "+ best_graph_fitness +"; " + elapsed_time + " seconds since last improvement");
 				//test_graph = canditate;
 				
 			}
